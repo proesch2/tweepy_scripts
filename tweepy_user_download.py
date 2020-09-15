@@ -23,23 +23,25 @@ tweets_json = []
 new_tweets = api.user_timeline(screen_name=screen_name, count=n_tweets, tweet_mode='extended')
 tweets_json += [tweet._json for tweet in new_tweets]
 
-# report download amount
-print(len(tweets_json), ' downloaded', end='\t')
 # get last id
 lastid = tweets_json[-1]['id']
 print(lastid, ' max_id')
 
+#cycle through rest of tweets in profile
 while len(new_tweets) > 0:
     new_tweets = api.user_timeline(screen_name=screen_name, count=n_tweets, max_id=lastid, tweet_mode='extended')
     tweets_json += [tweet._json for tweet in new_tweets]
     lastid = tweets_json[-1]['id'] - 1
 
-    print(len(tweets_json), ' downloaded', end='\t')
     print(lastid, ' max_id')
 
+# report download amount
+print(len(tweets_json), ' downloaded', end='\t')
+    
 import json
 import os
 
+#prepare path and save file
 path = './'
 file = screen_name + '_tweets.json'
 save = os.path.join(path, file)
@@ -47,6 +49,3 @@ save = os.path.join(path, file)
 with open(save, 'w') as outfile:
     json.dump(tweets_json, outfile)
 
-with open(save) as infile:
-    data = json.load(infile)
-len(data)
